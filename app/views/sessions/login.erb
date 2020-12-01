@@ -1,0 +1,19 @@
+<% if session[:user_id] %>
+
+<h3>THIS IS MY LOGIN</h3>
+
+<% else %>
+
+<h3>LOG IN HERE</h3>
+<br />
+
+<form action='/login' method="post">
+
+Username: <input type=text name="username" value="">
+Password: <input type=password name="password" value="">
+<input type=submit value="Log in!">
+
+
+</form>
+
+<% end %>
