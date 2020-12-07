@@ -4,6 +4,7 @@ class BookController < ApplicationController
 
     post '/books' do #CREATE
         @book = Book.create(title: params[:title], author: params[:author], user_id: session[:user_id])
+        
         redirect "/books/#{@book.id}"
     end 
 
@@ -28,7 +29,12 @@ class BookController < ApplicationController
 
     get '/books/:id/edit' do #EDIT 
         @book = Book.find(params[:id])
-        erb :'/books/edit'
+        
+        if current_user_id == @book.user_id
+            erb :'books/edit'
+        else
+            redirect '/'
+        end
     end 
 
     patch '/books/:id' do #UPDATE
@@ -37,7 +43,8 @@ class BookController < ApplicationController
         redirect "/books/#{@book.id}"
     end 
 
-    delete '/books/:id' do #DESTROY/
+    delete '/books/:id' do #DESTROY
+        current_user_id
         @book = Book.find(params[:id])
         @book.destroy
         redirect '/books'

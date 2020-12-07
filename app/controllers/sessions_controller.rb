@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
     end 
     
     get "/signup" do 
-        if session[:user_id]
+        if current_user_id
             "You're already logged in!"
         else
             erb :'sessions/signup'
@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
 
     post "/signup" do 
         @user = User.create(params[:user])
-        session[:user_id] = @user_id
+        session[:user_id] = @user.id
         redirect "/users/#{@user.id}" 
     end
 
@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
         @user = User.find_by(username: params[:username].strip)
         
         if @user.authenticate(params[:password])
-            session[:user_id] = @user_id
+            session[:user_id] = @user.id
             redirect "/users/#{@user.id}"
         else
             erb :'/sessions/login'
