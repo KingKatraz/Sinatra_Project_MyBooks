@@ -1,14 +1,14 @@
 class BookController < ApplicationController 
     
 
-
-    post '/books' do #CREATE
+    #User should not be able to view these pages if they are logged out. 
+    post '/books' do #CREATE & no blank books
         @book = Book.create(title: params[:title], author: params[:author], user_id: session[:user_id])
         
         redirect "/books/#{@book.id}"
     end 
 
-    get '/books/new' do #NEW
+    get '/books/new' do #NEW 
         erb :'/books/new'
     end 
 
@@ -37,17 +37,24 @@ class BookController < ApplicationController
         end
     end 
 
-    patch '/books/:id' do #UPDATE
+    patch '/books/:id' do #UPDATE & Implement same check as delete
         @book = Book.find(params[:id])
         @book.update(title: params[:title], author: params[:author])
         redirect "/books/#{@book.id}"
     end 
 
     delete '/books/:id' do #DESTROY
-        current_user_id
         @book = Book.find(params[:id])
-        @book.destroy
-        redirect '/books'
+        
+        if self.current_user_id != @book.user_id
+            redirect "/users/#{self.current_user_id}"
+        else
+            
+            
+            @book.destroy
+            redirect '/books'
+        end
+
     end 
 
 
