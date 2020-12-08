@@ -14,9 +14,23 @@ class ApplicationController < Sinatra::Base
   end
 
   helpers do 
+
+    def logged_in?
+      !!session[:user_id]
+    end
+
     def current_user_id
       session[:user_id]
-    end 
+    end
+
+    def authentication
+      redirect '/login' if !logged_in?
+    end
+
+    def authorize(resource)
+      redirect back if resource.user.id != current_user_id
+    end
+
   end
 
 

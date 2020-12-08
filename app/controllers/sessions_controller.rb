@@ -13,9 +13,13 @@ class SessionsController < ApplicationController
     end 
 
     post "/signup" do #add a check for blank params & username uniqueness
-        @user = User.create(params[:user])
-        session[:user_id] = @user.id
-        redirect "/users/#{@user.id}" 
+        @user = User.new(params[:user])
+        if @user.save
+          session[:user_id] = @user.id
+          redirect "/users/#{@user.id}" 
+        else
+          redirect "/signup"
+        end
     end
 
 
